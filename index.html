@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <link href="//unpkg.com/layui@2.8.3/dist/css/layui.css" rel="stylesheet">
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./lib/monaco-editor/min/vs/editor/editor.main.css" />
+  <link rel="stylesheet" type="text/css" href="./lib/splitpane/smart.default.css" />
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Roboto, sans-serif;
+      --smart-splitter-bar-size: 12px;
+    }
+
+    #app {
+      box-sizing: border-box;
+      padding: 1rem;
+      padding-left: 4.5rem;
+      height: 100vh;
+
+    }
+
+    #watermark {
+      display: none !important;
+    }
+
+    smart-splitter {
+      width: 100%;
+      height: 100%;
+    }
+
+    .smart-content::-webkit-scrollbar {
+      width: 0px;
+      height: 0px;
+    }
+
+    .smart-content:hover::-webkit-scrollbar {
+      width: 15px;
+      height: 15px;
+    }
+
+    .smart-content::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .smart-content::-webkit-scrollbar-track {
+      border-radius: 0px;
+      background: rgba(0, 0, 0, 0.1);
+    }
+    .monaco-scrollable-element>.invisible + canvas{
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div
+      style="position: fixed;display: flex;align-items: center;flex-direction: column; padding: 1rem .5rem; width: 4.5rem;top: 0;left: 0;bottom: 0">
+      <span id="btn-reset" title="重置为默认代码" style="width: 32px;padding: 10px 0;"><i class="layui-icon layui-icon-refresh" style="font-size: 22px;"></i></span>
+      <span style="flex:1 1 0%"></span>
+      <span style="width: 32px;padding: 10px 0;"><i class="layui-icon layui-icon-light" style="font-size: 22px;"></i></span>
+      <span id="btn-share" style="width: 32px;padding: 10px 0;"><i class="layui-icon layui-icon-share" style="font-size: 22px;"></i></span>
+      <!-- <span style="width: 32px;padding: 10px 0;"><i class="layui-icon layui-icon-moon" style="font-size: 22px;"></i></span> -->
+      <span style="width: 32px;padding: 10px 0;"><i class="layui-icon layui-icon-github" style="font-size: 22px;"></i></span>
+    </div>
+    <smart-splitter orientation="vertical" live-resize>
+      <smart-splitter-item size="50%" collapsible>
+        <smart-splitter orientation="horizontal" live-resize>
+          <smart-splitter-item size="50%" collapsible>
+            <div id="code-edit-javascript" style="height: 100%;"></div>
+          </smart-splitter-item>
+          <smart-splitter-item size="50%" collapsible>
+            <div id="code-edit-html" style="height: 100%;"></div>
+          </smart-splitter-item>
+        </smart-splitter>
+      </smart-splitter-item>
+      <smart-splitter-item size="50%" collapsible>
+        <iframe id="code-preview" class="iframe" style="width: 100%;height: 100%; border: none;"></iframe>
+      </smart-splitter-item>
+    </smart-splitter>
+  </div>
+  <script>
+    var require = {
+      paths: {
+        vs: './lib/monaco-editor/min/vs'
+      },
+      'vs/nls': {
+        availableLanguages: {
+          '*': 'zh-cn'
+        }
+      }
+    };
+  </script>
+  <script src="//unpkg.com/layui@2.8.3/dist/layui.js"></script>
+  <script src="./lib/monaco-editor/min/vs/loader.js"></script>
+  <script src="./lib/monaco-editor/min/vs/editor/editor.main.nls.zh-cn.js"></script>
+  <script src="./lib/monaco-editor/min/vs/editor/editor.main.js"></script>
+  <script src="./lib/fflate.js"></script>
+  <script type="module" src="lib/splitpane/smart.splitter.js"></script>
+  <script src="./index.js"></script>
+</body>
+
+</html>
