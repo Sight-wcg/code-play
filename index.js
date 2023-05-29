@@ -6,6 +6,18 @@ layui.use(async () => {
   const libSource = await (await fetch(libTypesUrl)).text();
   const snippets = await (await fetch('./snippets.json')).json(); //代码片段来自 https://marketplace.visualstudio.com/items?itemName=PFinal-nc.layui-snippets-pfinal
 
+  monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+    noSemanticValidation: false,
+    noSyntaxValidation: false,
+  });
+
+  monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+    target: monaco.languages.typescript.ScriptTarget.ESNext,
+    allowNonTsExtensions: true,
+    checkJs: true,
+    allowJs: true,
+  });
+
   monaco.languages.typescript.javascriptDefaults.addExtraLib(libSource, libUri);
 
   monaco.languages.registerCompletionItemProvider('html', {
