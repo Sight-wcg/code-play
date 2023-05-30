@@ -1,10 +1,15 @@
-layui.use(async () => {
-  const { jquery: $, layer } = layui;
-
+layui.config({base:'./lib/'})
+layui.use(['colorMode'], async () => {
+  const { jquery: $, layer, colorMode } = layui;
   const libTypesUrl = './layui.d.ts';
   const libUri = 'ts:filename/layui.d.ts';
   const libSource = await (await fetch(libTypesUrl)).text();
   const snippets = await (await fetch('./snippets.json')).json(); //代码片段来自 https://marketplace.visualstudio.com/items?itemName=PFinal-nc.layui-snippets-pfinal
+  const themeLight = await (await fetch('./themes/GitHub Light.json')).json();
+  const themeDark = await (await fetch('./themes/GitHub Dark.json')).json();
+
+  monaco.editor.defineTheme('github-dark', themeDark);
+  monaco.editor.defineTheme('github-light', themeLight);
 
   monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
     noSemanticValidation: false,
@@ -52,11 +57,23 @@ layui.use(async () => {
     options = {
       language: 'html',
       wordWrap: 'on', // 代码超出换行
-      theme: 'vs-light', // 主题
+      theme: 'github-dark', // 主题
       minimap: {
         enabled: false,
       },
       automaticLayout: true,
+      acceptSuggestionOnCommitCharacter: true,
+      bracketPairColorization: {
+        enabled: true,
+        independentColorPoolPerBracketType: true,
+      },
+      colorDecorators: true,
+      contextmenu: true,
+      copyWithSyntaxHighlighting: true,
+      dragAndDrop: true, // 控制编辑器是否可以拖放来移动 选中的文本
+      fixedOverflowWidgets: true, // 是否将超出编辑的组件 设置为fixed
+      matchOnWordStartOnly: true, // 控制建议是否允许在单词中间进行匹配，而不是仅在单词开头进行匹配
+      tabSize: 2,
       ...options,
     };
 
@@ -139,6 +156,18 @@ layui.use(function(){
 
   run();
 
+  var theme = colorMode.init({
+    selector: '.code-play',
+    initialValue: 'dark',
+    storageKey: 'code-play-theme',
+    onChanged: function (mode, defaultHandler) {
+      defaultHandler();
+      monaco.editor.setTheme(`github-${mode}`);
+      $('#btn-toggle-dark>i').attr('class','')
+        .addClass(`layui-icon layui-icon-${mode==='dark'? 'moon': 'light'}`);
+    }
+  });
+
   $('#btn-reset').on('click', function () {
     reset();
   });
@@ -146,6 +175,10 @@ layui.use(function(){
   $('#btn-share').on('click', function () {
     copyLink();
   });
+
+  $('#btn-toggle-dark').on('click',function(){
+    theme.setMode(theme.mode() === 'dark' ? 'light' : 'dark')
+  })
 
   // 监听编辑事件
   editorJs.onDidChangeModelContent(
